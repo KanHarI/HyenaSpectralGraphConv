@@ -69,5 +69,5 @@ class SpectralResnetBlock(torch.nn.Module):
         x = self.chebyshev_specgral_graph_conv(
             self.ln(x), eigenvalues, eigenvectors, inv_eigenvectors
         )
-        x = self.node_space_mlp(x)
+        x = x + self.node_space_mlp(x)
         return x
