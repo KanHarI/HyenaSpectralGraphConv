@@ -1,0 +1,33 @@
+resnet:
+  n_layers: 6
+  n_embed: 128
+  filter_approximation_rank: 10
+  linear_size_multiplier: 4
+  dropout: 0.1
+  ln_eps: 1e-5
+  nll_epsilon: 1e-5
+
+dataset:
+  n_nodes: 20
+  vocab_size: 10
+
+activation_conf:
+  _activation: "new_gelu"
+
+optimizer:
+  _optimizer: "adamw"
+  lr: 1e-4
+  warmup_iters: 1_000
+  max_iters: 10_000
+  schedule: "invsqrt"
+  weight_decay: 5e-2
+  eps: 1e-4
+  beta1: 0.9
+  beta2: 0.999
+  batch_size: 16
+  grad_accumulation_steps: 1
+
+dtype_conf:
+  _dtype: "float32"
+
+device: "cuda"
