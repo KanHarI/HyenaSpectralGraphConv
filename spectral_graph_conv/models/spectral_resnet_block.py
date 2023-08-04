@@ -23,7 +23,6 @@ class SpectralResnetBlockConfig:
     ln_eps: float
 
 
-@dataclasses.dataclass
 class SpectralResnetBlock(torch.nn.Module):
     def __init__(self, config: SpectralResnetBlockConfig):
         super().__init__()

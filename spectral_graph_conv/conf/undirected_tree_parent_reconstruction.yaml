@@ -1,3 +1,12 @@
+experiment:
+  wandb_log: false
+  project_name: "spectral_graph_conv"
+  run_name: "undirected_tree_parent_reconstruction"
+  log_interval: 25
+  eval_interval: 200
+  eval_iters: 100
+
+
 resnet:
   n_layers: 6
   n_embed: 128
@@ -26,6 +35,7 @@ optimizer:
   beta2: 0.999
   batch_size: 16
   grad_accumulation_steps: 1
+  init_std: 1e-2
 
 dtype_conf:
   _dtype: "float32"

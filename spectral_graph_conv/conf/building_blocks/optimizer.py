@@ -18,6 +18,7 @@ class OptimizerConf:
     beta2: float
     batch_size: int
     grad_accumulation_steps: int
+    init_std: float
 
     def create_optimizer(self, parameters: Any) -> torch.optim.Optimizer:
         match self._optimizer:
