@@ -112,8 +112,8 @@ def main(hydra_cfg: dict[Any, Any]) -> int:
                         nodes, parent_nodes, eigenvalues, eigenvectors, inv_eigenvectors
                     )
                     eval_losses[eval_step] = loss.item()
-                eval_loss = eval_losses.mean()
-                train_loss = train_losses.mean()
+                eval_loss = eval_losses.mean().item()
+                train_loss = train_losses.mean().item()
                 if config.experiment.wandb_log:
                     wandb.log(
                         {
