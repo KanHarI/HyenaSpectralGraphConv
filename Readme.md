@@ -1,5 +1,6 @@
 ## _This repository is not currently working_
-This is a failed attempt to look at the limitations of spectral graph convolutions. 
+This is an attempt to look at the limitations of spectral graph convolutions when applied to random graphs.
+The default run is an overfit on a tiny graph, does not generalize to large graphs at all.
 
 # Setup:
 Create a new venv, then:
