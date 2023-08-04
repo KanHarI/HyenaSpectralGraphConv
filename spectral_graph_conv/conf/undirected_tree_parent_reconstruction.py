@@ -17,3 +17,4 @@ class UndirectedTreeParentReconstructionConf:
     optimizer: OptimizerConf
     dtype_conf: DtypeConf
     device: str
+    embedder_sigma: float

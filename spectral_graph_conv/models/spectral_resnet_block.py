@@ -21,6 +21,7 @@ class SpectralResnetBlockConfig:
     activation: Callable[[torch.Tensor], torch.Tensor]
     dropout: float
     ln_eps: float
+    n_head: int
 
 
 class SpectralResnetBlock(torch.nn.Module):
@@ -39,6 +40,7 @@ class SpectralResnetBlock(torch.nn.Module):
             linear_size_multiplier=config.linear_size_multiplier,
             activation=config.activation,
             dropout=config.dropout,
+            n_head=config.n_head,
         )
         self.chebyshev_specgral_graph_conv = ChebyshevSpectralGraphConv(
             self.chebyshev_specgral_graph_conv_config

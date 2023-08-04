@@ -27,6 +27,9 @@ class ToyGraphSpectralResnetConfig:
     ln_eps: float
     vocab_size: int
     nll_epsilon: float
+    embedder_sigma: float
+    max_depth: int
+    n_head: int
 
 
 class ToyGraphSpectralResnet(torch.nn.Module):
@@ -40,6 +43,8 @@ class ToyGraphSpectralResnet(torch.nn.Module):
             device=config.device,
             init_std=config.init_std,
             nll_epsilon=config.nll_epsilon,
+            embedder_sigma=config.embedder_sigma,
+            max_depth=config.max_depth,
         )
         self.toy_graph_embedder = ToyGraphEmbedder(self.toy_graph_embedder_config)
         self.spectral_resnet_config = SpectralResnetConfig(
@@ -53,6 +58,7 @@ class ToyGraphSpectralResnet(torch.nn.Module):
             activation=config.activation,
             dropout=config.dropout,
             ln_eps=config.ln_eps,
+            n_head=config.n_head,
         )
         self.spectral_resnet = SpectralResnet(self.spectral_resnet_config)
 
@@ -63,11 +69,12 @@ class ToyGraphSpectralResnet(torch.nn.Module):
     def forward(
         self,
         input_nodes: torch.Tensor,
+        input_depths: torch.Tensor,
         output_nodes: torch.Tensor,
         eigenvalues: torch.Tensor,
         eigenvectors: torch.Tensor,
         inv_eigenvectors: torch.Tensor,
     ) -> torch.Tensor:
-        x = self.toy_graph_embedder(input_nodes)
+        x = self.toy_graph_embedder(input_nodes, input_depths)
         x = self.spectral_resnet(x, eigenvalues, eigenvectors, inv_eigenvectors)
         return self.toy_graph_embedder.loss(x, output_nodes)

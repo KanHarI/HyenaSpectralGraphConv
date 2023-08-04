@@ -1,34 +1,35 @@
 experiment:
-  wandb_log: false
+  wandb_log: true
   project_name: "spectral-graph-conv-on-random-tree"
-  run_name: "tinynet"
+  run_name: "20vocab-6nodes-Hyena"
   log_interval: 25
   eval_interval: 200
   eval_iters: 100
 
 
 resnet:
-  n_layers: 4
-  n_embed: 64
-  filter_approximation_rank: 20
+  n_layers: 6
+  n_embed: 256
+  n_head: 16
+  filter_approximation_rank: 25
   linear_size_multiplier: 4
   dropout: 0.1
   ln_eps: 1e-5
   nll_epsilon: 1e-5
 
 dataset:
-  n_nodes: 4
-  vocab_size: 3
+  n_nodes: 6
+  vocab_size: 20
 
 activation_conf:
   _activation: "new_gelu"
 
 optimizer:
   _optimizer: "adamw"
-  lr: 5e-4
+  lr: 2.5e-4
   warmup_iters: 1_000
-  max_iters: 10_000
-  schedule: "invsqrt"
+  max_iters: 20_000
+  schedule: "linear"
   weight_decay: 5e-2
   eps: 1e-4
   beta1: 0.9
@@ -40,4 +41,5 @@ optimizer:
 dtype_conf:
   _dtype: "float32"
 
-device: "cpu"
+device: "cuda"
+embedder_sigma: 1e-3

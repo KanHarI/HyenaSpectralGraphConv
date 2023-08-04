@@ -21,6 +21,7 @@ class SpectralResnetConfig:
     activation: Callable[[torch.Tensor], torch.Tensor]
     dropout: float
     ln_eps: float
+    n_head: int
 
 
 class SpectralResnet(torch.nn.Module):
@@ -37,6 +38,7 @@ class SpectralResnet(torch.nn.Module):
             activation=config.activation,
             dropout=config.dropout,
             ln_eps=config.ln_eps,
+            n_head=config.n_head,
         )
         self.blocks = torch.nn.ModuleList(
             [SpectralResnetBlock(self.block_config) for _ in range(config.n_layers)]

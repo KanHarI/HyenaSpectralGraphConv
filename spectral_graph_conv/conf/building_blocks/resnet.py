@@ -5,6 +5,7 @@ import dataclasses
 class ResnetConf:
     n_layers: int
     n_embed: int
+    n_head: int
     filter_approximation_rank: int
     linear_size_multiplier: int
     dropout: float

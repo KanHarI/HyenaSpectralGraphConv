@@ -11,6 +11,8 @@ class ToyGraphEmbedderConfig:
     device: str
     init_std: float
     nll_epsilon: float
+    embedder_sigma: float
+    max_depth: int
 
 
 class ToyGraphEmbedder(torch.nn.Module):
@@ -25,13 +27,37 @@ class ToyGraphEmbedder(torch.nn.Module):
                 requires_grad=True,
             )
         )
+        self.depth_embeddings = torch.nn.Parameter(
+            torch.zeros(
+                (config.max_depth, config.n_embed),
+                dtype=config.dtype,
+                device=config.device,
+                requires_grad=True,
+            )
+        )
+        self.noise_projection = torch.nn.Parameter(
+            torch.zeros(
+                (config.n_embed, config.n_embed),
+                dtype=config.dtype,
+                device=config.device,
+                requires_grad=True,
+            ),
+        )
         self.nll_epsilon = config.nll_epsilon
+        self.embedder_sigma = config.embedder_sigma
 
     def init_weights(self) -> None:
         torch.nn.init.normal_(self.embeddings, std=self.config.init_std)
+        torch.nn.init.normal_(self.noise_projection, std=self.config.init_std)
 
-    def forward(self, discrete: torch.Tensor) -> torch.Tensor:
-        return self.embeddings[discrete]
+    def forward(self, nodes: torch.Tensor, depths: torch.Tensor) -> torch.Tensor:
+        result = self.embeddings[nodes] + self.depth_embeddings[depths]
+        noise = torch.randn_like(result)
+        return (
+            result
+            + torch.einsum("bni,ij->bnj", noise, self.noise_projection)
+            * self.embedder_sigma
+        )
 
     def loss(self, x: torch.Tensor, y_discrete: torch.Tensor) -> torch.Tensor:
         restored = torch.einsum("bnv,lv->bnl", x, self.embeddings)

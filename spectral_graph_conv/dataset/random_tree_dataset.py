@@ -25,6 +25,7 @@ class RandomTreeSpectralDataset(
             torch.Tensor,
             torch.Tensor,
             torch.Tensor,
+            torch.Tensor,
         ]
     ]
 ):
@@ -44,6 +45,7 @@ class RandomTreeSpectralDataset(
         torch.Tensor,
         torch.Tensor,
         torch.Tensor,
+        torch.Tensor,
     ]:
         random_tree = ToyUndirectedTree.create_random_tree(
             self.config.vocab_size, self.config.n_nodes
@@ -57,6 +59,7 @@ class RandomTreeSpectralDataset(
         )
         return (
             random_tree.nodes,
+            random_tree.depths,
             random_tree.get_parent_node_labels_tensor(self.config.vocab_size),
             random_tree.edges,
             eigenvalues

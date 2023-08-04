@@ -5,8 +5,8 @@ import dacite
 import hydra
 import torch
 import torch.utils.data
-import wandb
 
+import wandb
 from spectral_graph_conv.conf.undirected_tree_parent_reconstruction import (
     UndirectedTreeParentReconstructionConf,
 )
@@ -75,6 +75,9 @@ def main(hydra_cfg: dict[Any, Any]) -> int:
         ln_eps=config.resnet.ln_eps,
         vocab_size=config.dataset.vocab_size + 1,  # +1 for root node
         nll_epsilon=config.resnet.nll_epsilon,
+        embedder_sigma=config.embedder_sigma,
+        max_depth=config.dataset.n_nodes,
+        n_head=config.resnet.n_head,
     )
     toy_spectral_resnet = ToyGraphSpectralResnet(toy_spectral_resnet_config)
     toy_spectral_resnet.init_weights()
@@ -102,6 +105,7 @@ def main(hydra_cfg: dict[Any, Any]) -> int:
                 for eval_step in range(config.experiment.eval_iters):
                     (
                         nodes,
+                        depths,
                         parent_nodes,
                         _,  # We do not use the adjacency matrix directly
                         eigenvalues,
@@ -109,7 +113,12 @@ def main(hydra_cfg: dict[Any, Any]) -> int:
                         inv_eigenvectors,
                     ) = map(lambda x: x.to(config.device), next(dataloader))
                     loss = toy_spectral_resnet(
-                        nodes, parent_nodes, eigenvalues, eigenvectors, inv_eigenvectors
+                        nodes,
+                        depths,
+                        parent_nodes,
+                        eigenvalues,
+                        eigenvectors,
+                        inv_eigenvectors,
                     )
                     eval_losses[eval_step] = loss.item()
                 eval_loss = eval_losses.mean().item()
@@ -144,6 +153,7 @@ def main(hydra_cfg: dict[Any, Any]) -> int:
         # Train
         (
             nodes,
+            depths,
             parent_nodes,
             _,  # We do not use the adjacency matrix directly
             eigenvalues,
@@ -151,7 +161,7 @@ def main(hydra_cfg: dict[Any, Any]) -> int:
             inv_eigenvectors,
         ) = map(lambda x: x.to(config.device), next(dataloader))
         loss = toy_spectral_resnet(
-            nodes, parent_nodes, eigenvalues, eigenvectors, inv_eigenvectors
+            nodes, depths, parent_nodes, eigenvalues, eigenvectors, inv_eigenvectors
         )
         train_losses[step % config.experiment.eval_interval] = loss.item()
         if step % config.experiment.log_interval == 0:
