@@ -59,7 +59,8 @@ class RandomTreeSpectralDataset(
             random_tree.nodes,
             random_tree.get_parent_node_labels_tensor(self.config.vocab_size),
             random_tree.edges,
-            eigenvalues,
+            eigenvalues - 1,  # Shift eigenvalues to be centered around 0, as recommended for laplacian spectra.
+            # Resulting eigenvalues are in the range [-1, 1]
             eigenvectors,
             inv_eigenvectors,
         )

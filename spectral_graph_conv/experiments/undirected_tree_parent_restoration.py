@@ -157,7 +157,7 @@ def main(hydra_cfg: dict[Any, Any]) -> int:
         if step % config.experiment.log_interval == 0:
             print(f"Step: {step}, loss: {loss.item()}")
         (loss / config.optimizer.grad_accumulation_steps).backward()
-        if (step + 1) % config.optimizer.grad_accumulation_steps:
+        if (step + 1) % config.optimizer.grad_accumulation_steps == 0:
             optimizer.step()
             optimizer.zero_grad()
     return 0

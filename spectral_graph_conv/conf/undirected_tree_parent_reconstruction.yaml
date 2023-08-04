@@ -1,31 +1,31 @@
 experiment:
   wandb_log: false
-  project_name: "spectral_graph_conv"
-  run_name: "undirected_tree_parent_reconstruction"
+  project_name: "spectral-graph-conv-on-random-tree"
+  run_name: "tinynet"
   log_interval: 25
   eval_interval: 200
   eval_iters: 100
 
 
 resnet:
-  n_layers: 6
-  n_embed: 128
-  filter_approximation_rank: 10
+  n_layers: 4
+  n_embed: 64
+  filter_approximation_rank: 20
   linear_size_multiplier: 4
   dropout: 0.1
   ln_eps: 1e-5
   nll_epsilon: 1e-5
 
 dataset:
-  n_nodes: 20
-  vocab_size: 10
+  n_nodes: 4
+  vocab_size: 3
 
 activation_conf:
   _activation: "new_gelu"
 
 optimizer:
   _optimizer: "adamw"
-  lr: 1e-4
+  lr: 5e-4
   warmup_iters: 1_000
   max_iters: 10_000
   schedule: "invsqrt"
@@ -40,4 +40,4 @@ optimizer:
 dtype_conf:
   _dtype: "float32"
 
-device: "cuda"
+device: "cpu"
