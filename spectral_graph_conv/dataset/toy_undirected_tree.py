@@ -8,7 +8,7 @@ from spectral_graph_conv.dataset.toy_undirected_graph import ToyUndirectedGraph
 
 
 @dataclasses.dataclass
-class ToyTree(ToyUndirectedGraph):
+class ToyUndirectedTree(ToyUndirectedGraph):
     @classmethod
     def create_random_tree(cls, vocab_size: int, n_nodes: int) -> Self:
         nodes = torch.randint(vocab_size, (n_nodes,))

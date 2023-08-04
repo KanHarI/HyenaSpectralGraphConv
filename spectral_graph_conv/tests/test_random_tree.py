@@ -1,4 +1,4 @@
-from spectral_graph_conv.dataset.toy_undirected_tree import ToyTree
+from spectral_graph_conv.dataset.toy_undirected_tree import ToyUndirectedTree
 
 NUM_TESTS = 10
 VOCAB_SIZE = 10
@@ -7,7 +7,7 @@ N_NODES = 100
 
 def test_parents_random_tree() -> None:
     for i in range(NUM_TESTS):
-        tree = ToyTree.create_random_tree(VOCAB_SIZE, N_NODES)
+        tree = ToyUndirectedTree.create_random_tree(VOCAB_SIZE, N_NODES)
         parent_indices = tree.get_parent_node_indices()
         parent_labels = tree.get_parent_node_labels_tensor(VOCAB_SIZE)
         assert parent_indices[0] == -1
